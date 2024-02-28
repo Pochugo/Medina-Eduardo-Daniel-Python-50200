@@ -1,0 +1,58 @@
+{% extends 'comiqueriapp/home.html' %}
+
+{% block titulo %}
+<h1 class="mx-auto my-0 text-uppercase">Comics</h1>
+{% endblock titulo %}
+
+{% block contenido %}
+
+<table>
+    <tr>
+        <td width="200"><h2>Comics</h2></td>
+        <td>
+            <a
+            href="{% url 'comicForm' %}"
+            class="btn btn-primary btn-sm"
+            ><i class="fa fa-plus fa-lg" title="Crear"> </i>
+            </a>
+        </td>
+    </tr>
+</table>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Editorial</th>
+            <th>Autor</th>
+            <th>Modificar/Borrar</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for x in comic %}
+        <tr>
+            <td>{{ x.id }} </td>
+            <td>{{ x.nombre }} </td>
+            <td>{{ x.editorial }} </td>
+            <td>{{ x.autor }} </td>
+            <td> 
+                <a
+                href="{% url 'modificarComic' x.id %}"
+                class="btn btn-primary"
+                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-bor"
+                ><i class="fa fa-edit fa-sm" title="Edit Record"></i>
+            </a>
+            <a
+                href="{% url 'borrarComic' x.id %}"
+                class="btn btn-danger"
+                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-bor"
+                ><i class="fa fa-trash fa-sm" title="Delete Record"></i>
+            </a>
+            </td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>        
+
+{% endblock contenido %}
