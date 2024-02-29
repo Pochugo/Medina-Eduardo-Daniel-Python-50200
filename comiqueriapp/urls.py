@@ -1,6 +1,11 @@
 from django.urls import path, include
 from .views import *
 
+from django.urls import path
+from .views import login_request
+
+from django.contrib.auth.views import LogoutView
+
 urlpatterns = [
     path('', home, name="home"),
     path('comic', comic, name="comic"),
@@ -33,5 +38,11 @@ urlpatterns = [
     path('borrar_comic/<id_comic>/', borrarComic, name="borrarComic"),
     path('borrar_distribuidor/<id_distribuidor>/', borrarDistribuidor, name="borrarDistribuidor"),
     path('borrar_envio/<id_envio>/', borrarEnvio, name="borrarEnvio"),
+
+# LOGIN, LOGOUT, REGISTRACIÓN, EDITAR PERFIL ___________________________________________________
+    path('login/', login_request, name="login"),
+    path('registro/', register, name="registro"),
+    path('logout/', custom_logout, name='logout'),
+    path('editar_perfil/', editarPerfil, name="editar_perfil"),
 
 ]

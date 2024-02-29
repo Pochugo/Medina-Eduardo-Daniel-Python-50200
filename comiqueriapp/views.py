@@ -1,22 +1,26 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.urls import reverse_lazy
+from django.http      import HttpResponse
+from django.urls      import reverse_lazy
 
 from .models import *
-from .forms import *
+from .forms  import *
 
+from django.contrib.auth.forms      import AuthenticationForm
+from django.contrib.auth            import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 ##_______________________________________________ HOME _________________________________________________________________________________________________
 def home(request):
     return render(request, "comiqueriapp/home.html")
 
 
-##__________________________ CLIENTE __________________________________________________________________________________________________________________
+##__________________________ CLASE CLIENTE __________________________________________________________________________________________________________________
 
 def cliente(request):
     contexto = {'cliente': Cliente.objects.all()}
     return render(request, "comiqueriapp/cliente.html", contexto)
 
+@login_required
 
 def clienteForm(request):
     if request.method == "POST":
@@ -60,12 +64,13 @@ def borrarCliente(request, id_cliente):
         return redirect(reverse_lazy('cliente'))
     
     
-##__________________________ COMICS __________________________________________________________________________________________________________________
+##__________________________ CLASE COMICS __________________________________________________________________________________________________________________
 
 def comic(request):
     contexto = {'comic': Comic.objects.all()}
     return render(request, "comiqueriapp/comic.html", contexto)
 
+@login_required
 
 def comicForm(request):
     if request.method == "POST":
@@ -108,12 +113,13 @@ def borrarComic(request, id_comic):
         return redirect(reverse_lazy('comic'))
     
 
-##__________________________ DISTRIBUIDORES __________________________________________________________________________________________________________________
+##__________________________ CLASE DISTRIBUIDORES __________________________________________________________________________________________________________________
 
 def distribuidor(request):
     contexto = {'distribuidor': Distribuidor.objects.all()}
     return render(request, "comiqueriapp/distribuidor.html", contexto)
 
+@login_required
 
 def distribuidorForm(request):
     if request.method == "POST":
@@ -157,12 +163,13 @@ def borrarDistribuidor(request, id_distribuidor):
         return redirect(reverse_lazy('distribuidor'))
     
     
-##__________________________ ENVÍOS __________________________________________________________________________________________________________________
+##__________________________ CLASE ENVÍOS __________________________________________________________________________________________________________________
 
 def envio(request):
     contexto = {'envio': Envio.objects.all()}
     return render(request, "comiqueriapp/envio.html", contexto)
 
+@login_required
 
 def envioForm(request):
     if request.method == "POST":
@@ -206,7 +213,7 @@ def borrarEnvio(request, id_envio):
         return redirect(reverse_lazy('envio'))
 
 
-##__________________________ BUSCAR UN COMIC __________________________________________________________________________________________________________________
+##__________________________ BUSCAR UN COMIC (CLASE) __________________________________________________________________________________________________________________
 
 def buscar(request):
     return render(request, "comiqueriapp/buscar.html")
@@ -218,3 +225,60 @@ def buscarComic(request):
         contexto = {"comic": comic}
         return render(request, "comiqueriapp/comic.html", contexto)
     return HttpResponse("No se ingresaron patrones de busqueda")
+
+##__________________________ LOGIN, LOGOUT, REGISTRACIÓN __________________________________________________________________________________________________________________
+
+def login_request(request):
+    if request.method == "POST":
+        usuario = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=usuario, password=password)
+        if user is not None:
+            login(request, user)
+            return render(request, "comiqueriapp/home.html")
+        else:
+            return redirect(reverse_lazy('login'))
+
+    miForm = AuthenticationForm()
+
+    return render(request, "comiqueriapp/login.html", {"form": miForm})
+
+def register(request):
+    if request.method == "POST":
+        miForm = RegistroForm(request.POST)
+        if miForm.is_valid():
+            usuario = miForm.cleaned_data.get("username")
+            miForm.save()
+            return redirect(reverse_lazy('home'))
+    else:
+        miForm = RegistroForm()
+        
+    return render(request, "comiqueriapp/registro.html", {"form": miForm })
+
+def custom_logout(request):
+    logout(request)
+    return redirect(reverse_lazy('home'))
+
+##__________________________ EDITAR PERFIL DE USUARIO __________________________________________________________________________________________________________________
+
+@login_required
+def editarPerfil(request):
+    usuario = request.user
+    
+    if request.method == "POST":
+        form = UserEditForm(request.POST)
+        if form.is_valid():
+            informacion = form.cleaned_data
+            user = User.objects.get(username=usuario)
+            user.email = informacion['email']
+            user.first_name = informacion['first_name']
+            user.last_name = informacion['last_name']
+            user.set_password(informacion['password1'])
+            form.save()
+            return render(request, "comiqueriapp/home.html")    
+    else:
+        form = UserEditForm(instance = usuario)
+        
+    return render(request, "comiqueriapp/editaPerfil.html", {"form": form })
+
+
