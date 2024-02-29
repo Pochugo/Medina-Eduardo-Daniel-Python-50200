@@ -39,6 +39,7 @@ urlpatterns = [
     path('borrar_distribuidor/<id_distribuidor>/', borrarDistribuidor, name="borrarDistribuidor"),
     path('borrar_envio/<id_envio>/', borrarEnvio, name="borrarEnvio"),
 
+
 # LOGIN, LOGOUT, REGISTRACIÓN, EDITAR PERFIL ___________________________________________________
     path('login/', login_request, name="login"),
     path('registro/', register, name="registro"),

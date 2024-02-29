@@ -43,10 +43,9 @@ def modificarCliente(request, id_cliente):
     if request.method == "POST":
         miForm = ClienteForm(request.POST)
         if miForm.is_valid():
-            cliente.apellido = miForm.cleaned_data.get("apellido")
-            cliente.nombre = miForm.cleaned_data.get("nombre")
-            cliente.telefono = miForm.cleaned_data.get("telefono")
-            cliente = Cliente(apellido=cliente.apellido, nombre=cliente.nombre, telefono=cliente.telefono)
+            cliente.apellido = miForm.cleaned_data.get('apellido')
+            cliente.nombre = miForm.cleaned_data.get('nombre')
+            cliente.telefono = miForm.cleaned_data.get('telefono')
             cliente.save()
             return redirect(reverse_lazy('cliente'))
     else:
@@ -95,7 +94,6 @@ def modificarComic(request, id_comic):
             comic.nombre = miForm.cleaned_data.get("nombre")
             comic.editorial = miForm.cleaned_data.get("editorial")
             comic.autor = miForm.cleaned_data.get("autor")
-            comic = Comic(nombre=comic.nombre, editorial=comic.editorial, autor=comic.autor)
             comic.save()
             return redirect(reverse_lazy('comic'))
     else:
@@ -145,7 +143,6 @@ def modificarDistribuidor(request, id_distribuidor):
             distribuidor.nombre = miForm.cleaned_data.get("nombre")
             distribuidor.direccion = miForm.cleaned_data.get("direccion")
             distribuidor.telefono = miForm.cleaned_data.get("telefono")
-            distribuidor = Distribuidor(nombre=distribuidor.nombre, direccion=distribuidor.direccion, telefono=distribuidor.telefono)
             distribuidor.save()
             return redirect(reverse_lazy('distribuidor'))
     else:
@@ -195,7 +192,6 @@ def modificarEnvio(request, id_envio):
             envio.empresa = miForm.cleaned_data.get("empresa")
             envio.nombre = miForm.cleaned_data.get("nombre")
             envio.telefono = miForm.cleaned_data.get("telefono")
-            envio = Envio(empresa=envio.empresa, nombre=envio.nombre, telefono=envio.telefono)
             envio.save()
             return redirect(reverse_lazy('envio'))
     else:
