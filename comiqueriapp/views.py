@@ -235,6 +235,16 @@ def login_request(request):
         user = authenticate(request, username=usuario, password=password)
         if user is not None:
             login(request, user)
+            
+            ##______ AVATAR _______________________________
+            try:
+                avatar = Avatar.objects.get(user=request.user.id).imagen.url
+            except:
+                avatar = "/media/avatares/default.png"
+            finally:
+                request.session["avatar"] = avatar
+            ##_____________________________________________
+            
             return render(request, "comiqueriapp/home.html")
         else:
             return redirect(reverse_lazy('login'))
@@ -281,4 +291,30 @@ def editarPerfil(request):
         
     return render(request, "comiqueriapp/editaPerfil.html", {"form": form })
 
-
+@login_required
+def agregarAvatar(request):
+    if request.method == "POST":
+        form = AvatarForm(request.POST, request.FILES)
+        if form.is_valid():
+            usuario = User.objects.get(username=request.user)
+          
+         
+            ##______BORRAR AVATAR VIEJO _______________________________
+            avatarViejo = Avatar.objects.filter(user=usuario)
+            if len(avatarViejo) > 0:
+                for i in range(len(avatarViejo)):
+                    avatarViejo[i].delete()
+            ##__________________________________________________________        
+            avatar = Avatar(user=usuario, imagen=form.cleaned_data['imagen'])
+            avatar.save()
+            
+            ##______ URL DE LA IMAGEN EN REQUEST _______________________________
+            imagen = Avatar.objects.get(user=request.user.id).imagen.url
+            request.session["avatar"] = imagen
+            return render(request, "comiqueriapp/home.html")
+          
+    else:
+        form = AvatarForm()
+                            
+        return render(request, "comiqueriapp/agregarAvatar.html", {"form": form})
+    

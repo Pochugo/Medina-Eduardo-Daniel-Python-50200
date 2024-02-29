@@ -8,20 +8,24 @@ class ClienteForm(forms.Form):
     nombre = forms.CharField(max_length=50, required=True)
     telefono = forms.IntegerField(required=True)
     
+    
 class ComicForm(forms.Form):
     nombre = forms.CharField(max_length=50, required=True)
     editorial = forms.CharField(max_length=50, required=True)
     autor = forms.CharField(required=True)
+
 
 class DistribuidorForm(forms.Form):
     nombre = forms.CharField(max_length=50, required=True)
     direccion = forms.CharField(max_length=50, required=True)
     telefono = forms.IntegerField(required=True)
     
+    
 class EnvioForm(forms.Form):
     empresa = forms.CharField(max_length=50, required=True)
     nombre = forms.CharField(max_length=50, required=True)
     telefono = forms.IntegerField(required=True)
+    
     
 class RegistroForm(UserCreationForm):
     email = forms.EmailField(max_length=50, required=True)
@@ -31,6 +35,7 @@ class RegistroForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
+    
     
 class UserEditForm(UserCreationForm):
     email = forms.EmailField(max_length=50, required=True)
@@ -42,4 +47,8 @@ class UserEditForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name']
+    
+    
+class AvatarForm(forms.Form):
+    imagen = forms.ImageField(required=True)    
     

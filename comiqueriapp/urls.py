@@ -44,5 +44,6 @@ urlpatterns = [
     path('registro/', register, name="registro"),
     path('logout/', custom_logout, name='logout'),
     path('editar_perfil/', editarPerfil, name="editar_perfil"),
+    path('agregar_avatar/', agregarAvatar, name="agregar_avatar"),
 
 ]
